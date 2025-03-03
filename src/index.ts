@@ -1,4 +1,7 @@
-import { startServer } from './server/server.ts'
+import { startServer } from './server/server'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 process.on('unhandledRejection', (err) => {
   console.error(err)

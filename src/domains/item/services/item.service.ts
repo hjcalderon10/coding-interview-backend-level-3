@@ -5,22 +5,22 @@ export class ItemService {
   constructor(private repository: IItemRepository) {}
 
   create(item: Omit<Item, 'id'>) {
-    return this.repository.create(item);
+    return this.repository.create(item)
   }
-  
+
   findAll() {
-    return this.repository.findAll();
+    return this.repository.findAll()
   }
 
   findById(id: string) {
-    return this.repository.findById(id);
+    return this.repository.findById(id)
   }
 
-  update(id: string, item: Omit<Item, 'id'>) {
-    return this.repository.update(id, item);
+  update(id: string, item: Item) {
+    return this.repository.update(id, item)
   }
 
   delete(id: string) {
-    return this.repository.delete(id);
+    return this.repository.delete(id)
   }
 }

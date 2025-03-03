@@ -3,8 +3,6 @@
     "target": "ESNext",
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
     "lib": ["ESNext"],
     "strict": true,
     "skipLibCheck": true,
@@ -15,6 +13,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": ["@prisma/client"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },

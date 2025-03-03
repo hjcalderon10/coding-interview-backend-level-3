@@ -16,21 +16,31 @@ export class ItemController {
   }
 
   public getAllItemsHandler = async (_: Hapi.Request, h: Hapi.ResponseToolkit) => {
-    return h.response(await this.service.findAll()).code(200)
+    return h.response(await this.service.findAll()).code(StatusCodes.OK)
   }
 
   public getItemByIdHandler = async (req: Hapi.Request, h: Hapi.ResponseToolkit) => {
     const item = await this.service.findById(req.params.id)
-    return item ? h.response(item) : h.response({ error: 'Not Found' }).code(404)
+
+    Logger.debug(`Item found: ${JSON.stringify(item)}`)
+    return item ? h.response(item) : h.response({ error: 'Not Found' }).code(StatusCodes.NOT_FOUND)
   }
 
   public updateItemHandler = async (req: Hapi.Request, h: Hapi.ResponseToolkit) => {
     const updatedItem = await this.service.update(req.params.id, req.payload as any)
-    return updatedItem ? h.response(updatedItem) : h.response({ error: 'Not Found' }).code(404)
+
+    Logger.debug(`Item updated: ${JSON.stringify(updatedItem)}`)
+    return updatedItem
+      ? h.response(updatedItem)
+      : h.response({ error: 'Not Found' }).code(StatusCodes.NOT_FOUND)
   }
 
   public deleteItemHandler = async (req: Hapi.Request, h: Hapi.ResponseToolkit) => {
     const success = await this.service.delete(req.params.id)
-    return success ? h.response().code(204) : h.response({ error: 'Not Found' }).code(404)
+
+    Logger.debug(`Item deleted: ${success} with id: ${req.params.id}`)
+    return success
+      ? h.response().code(StatusCodes.NO_CONTENT)
+      : h.response({ error: 'Not Found' }).code(StatusCodes.NOT_FOUND)
   }
 }
