@@ -1,6 +1,6 @@
 import { Server } from "@hapi/hapi"
 
-export const defineRoutes = (server: Server) => {
+export const healthCheckRoutes = (server: Server) => {
     server.route({
         method: 'GET',
         path: '/ping',

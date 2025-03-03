@@ -9,18 +9,19 @@ export default [
   {
     languageOptions: {
       parserOptions: {
-        project: "./tsconfig.json"
-      }
+        project: './tsconfig.json',
+      },
     },
     settings: {
-      "import/resolver": {
+      'import/resolver': {
         typescript: {
-          project: "./tsconfig.json"
-        }
-      }
+          project: './tsconfig.json',
+        },
+      },
     },
     rules: {
-      "prettier/prettier": ["error", { singleQuote: true, semi: false }]
-    }
-  }
+      'prettier/prettier': ['error', { singleQuote: true, semi: false }],
+      'max-len': 'off',
+    },
+  },
 ]
