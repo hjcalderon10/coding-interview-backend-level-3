@@ -1,5 +1,5 @@
 import Hapi from '@hapi/hapi'
-import { defineRoutes } from './routes'
+import { defineRoutes } from './routes.ts'
 
 const getServer = () => {
     const server = Hapi.server({
