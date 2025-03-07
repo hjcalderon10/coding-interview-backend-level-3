@@ -1,3 +1,6 @@
+# Readme updated after guidelines. [Express link](#updates-from-developer)  🚂
+
+
 # Bienvenido al coding-interview-backend-level-3 - Parte I
 
 ## Descripción
@@ -168,9 +171,10 @@ coding-interview-backend-level-3/
 ## Next Steps
 
 1. **Additional tests**: extend unit tests into integration tests.
-2. **Add cache**: Redis is already in the prod docker-compose. Could be added to reduce db bottleneck.
-3. **Rate Limiter**: To add rate limiters for sensible/all endpoints.
-4. **CI/CD**: Configure CI/CD with GitHub, Bitbucket or Jenkins, attach env vars onto the docker-compose for prod/dev env purposes.
+2. **Authentication/Autorization**: Add middlewares to manage autentication/autorization.
+3. **Add cache**: Redis is already in the prod docker-compose. Could be added to reduce db bottleneck.
+4. **Rate Limiter**: To add rate limiters for sensible/all endpoints.
+5. **CI/CD**: Configure CI/CD with GitHub, Bitbucket or Jenkins, attach env vars onto the docker-compose for prod/dev env purposes.
 4. **Historical data**: Save historical data under a long living db like Snowflake.
 5. **SonarQube**: Get a SonarQube server and guarantee a minimum Quality Gate.
 6. **APM (Application Performance Monitoring)**: To integrate an APM (DataDog, Splunk, ELK) to provide insight over key performance metrics.
