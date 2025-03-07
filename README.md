@@ -49,20 +49,22 @@ Eres el Senior Developer de tu equipo en El Dorado, y te han dado la responsabil
 
 ## Guidelines broken
 This API have been considered to be used for longer, therefore it have been thought to have API versions in place.
-Knowing that, the file e2e/index.test.ts have been slightly modified to use the versions.
+Knowing that, the file e2e/index.test.ts have been slightly modified to use the versions. (And linter changes that I did not bother to undo 🙈)
 
-> From
-> const response = await server.inject({
->        method: 'GET',
->        url: '/items',
->      })
-> 
-> To
-> const response = await server.inject({
->        method: 'GET',
->        url: '/v1/items',
->      })
-
+From
+``` 
+ const response = await server.inject({
+            method: 'GET',
+            url: '/items',
+      })
+ ```
+ To
+ ```
+ const response = await server.inject({
+        method: 'GET',
+        url: '/v1/items',
+    })
+```
 ### If this is a deal breaker, is possible to update and remove the versioning in no time 🫣
 
 ## Scripts in package.json
