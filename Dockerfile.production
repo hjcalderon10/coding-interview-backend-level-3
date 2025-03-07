@@ -1,0 +1,48 @@
+# -------- BASE STAGE (Build Dependencies) --------
+FROM node:20 AS builder
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json first for better caching
+COPY package.json package-lock.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+
+# Copy the entire source code
+COPY . .
+
+# Compile TypeScript
+RUN npm run build
+
+
+# -------- FINAL STAGE (Production-Ready App) --------
+FROM node:20 AS runner
+
+WORKDIR /app
+
+# Copy only necessary files from builder
+COPY --from=builder /app/package.json /app/package-lock.json ./
+
+# Install only production dependencies
+RUN npm ci --only=production
+
+# Copy built dist/ folder
+COPY --from=builder /app/dist /app/dist
+
+# Copy migrations folder
+COPY --from=builder /app/migrations /app/migrations
+
+# Copy Knex configuration
+COPY --from=builder /app/knexfile.js ./knexfile.js
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV DEVCONTAINER=true
+
+# Expose necessary port
+EXPOSE 3000
+
+# Run database migrations and start the app. Migrations should actually be performed elsewhere in the pipeline (CI/CD).
+CMD ["sh", "-c", "npx knex migrate:latest --knexfile knexfile.js && npm run start"]

@@ -1,26 +1,38 @@
 import { IItemRepository } from '@/domains/item/repositories/item.repository.interface';
-import { Item } from '@/entities/item.entity';
+import { Item, UpdateItem } from '@/entities/item.entity'
 
 export class ItemService {
   constructor(private repository: IItemRepository) {}
 
-  create(item: Omit<Item, 'id'>) {
-    return this.repository.create(item)
+  async create(item: Omit<Item, 'id'>): Promise<Item> {
+    const createdItem = await this.repository.create(item)
+    return this.removeCreatedDate(createdItem) as Item
   }
 
-  findAll() {
-    return this.repository.findAll()
+  async findAll(): Promise<Item[]> {
+    return this.removeCreatedDate(await this.repository.findAll()) as Item[]
   }
 
-  findById(id: string) {
-    return this.repository.findById(id)
+  async findById(id: string): Promise<Item | null> {
+    const item = await this.repository.findById(id)
+    return item ? (this.removeCreatedDate(item) as Item) : null
   }
 
-  update(id: string, item: Item) {
-    return this.repository.update(id, item)
+  async update(id: string, item: UpdateItem): Promise<Item | null> {
+    const updatedItem = await this.repository.update(id, item)
+    return updatedItem ? (this.removeCreatedDate(updatedItem) as Item) : null
   }
 
-  delete(id: string) {
+  delete(id: string): Promise<boolean> {
     return this.repository.delete(id)
+  }
+
+  removeCreatedDate(item: Item | Item[]): Item | Item[] {
+    if (Array.isArray(item)) {
+      return item.map(({ created_date, ...rest }) => rest)
+    }
+
+    const { created_date, ...rest } = item
+    return rest
   }
 }

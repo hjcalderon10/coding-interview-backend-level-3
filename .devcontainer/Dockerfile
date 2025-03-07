@@ -1,60 +1,20 @@
-# -------- BASE STAGE (Build Dependencies) --------
-FROM node:20 AS builder
+# -------- DEVELOPMENT STAGE --------
+FROM node:20 AS dev
 
-# Install OpenSSL for Prisma compatibility on ARM64
-RUN apt update && apt install -y libssl-dev
-
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json first for better caching
 COPY package.json package-lock.json ./
 
-# Install all dependencies (including dev dependencies)
-RUN npm ci
+# Install ALL dependencies (dev + prod)
+RUN npm install
 
-# Copy Prisma schema
-COPY prisma ./prisma/
-
-# **Generate Prisma Client with correct binary**
-RUN npx prisma generate
-
-# Copy the entire source code
+# Copy the rest of the project (except node_modules, ignored via .dockerignore)
 COPY . .
 
-# Compile TypeScript
-RUN npm run build
-
-
-# -------- FINAL STAGE (Production-Ready App) --------
-FROM node:20 AS runner
-
-WORKDIR /app
-
-# Install OpenSSL in production container
-RUN apt update && apt install -y libssl-dev
-
-# Copy only necessary files from builder
-COPY --from=builder /app/package.json /app/package-lock.json ./
-RUN npm ci --only=production
-
-# **Copy Prisma Client from builder**
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# **Copy Prisma schema (needed for migrations)**
-COPY --from=builder /app/prisma ./prisma
-
-# Copy built dist/ folder
-COPY --from=builder /app/dist ./dist
-
-# Set environment variables
-ENV NODE_ENV=production
-ENV NODE_PATH=dist
-ENV DEVCONTAINER=true
-
-# Expose necessary port
+# Expose necessary ports
 EXPOSE 3000
 
-# Run the compiled app
-CMD ["npm", "run", "start"]
+# Ensure dependencies are installed, run migrations, and start app with --watch
+CMD ["sh", "-c", "npx knex migrate:latest --knexfile knexfile.js && node --watch ./src/index.js"]

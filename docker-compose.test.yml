@@ -1,0 +1,35 @@
+services:
+  test-db:
+    image: postgres:15
+    container_name: test_postgres
+    restart: always
+    env_file:
+      - .env.testing
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 3s
+    networks:
+      - test_network
+
+  test-api:
+    build: 
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: test_server
+    restart: always
+    env_file:
+      - .env.testing
+    ports:
+      - "3000:3000"
+    depends_on:
+      - test-db
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    driver: bridge

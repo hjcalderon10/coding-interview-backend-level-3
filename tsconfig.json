@@ -13,9 +13,10 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["@prisma/client"],
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }

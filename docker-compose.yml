@@ -2,7 +2,7 @@ services:
   app:
     build: 
       context: .
-      dockerfile: .devcontainer/Dockerfile
+      dockerfile: ./Dockerfile.production
     container_name: eldorado_server
     restart: always
     ports:
@@ -13,15 +13,12 @@ services:
       redis:
         condition: service_healthy
     env_file:
-      - .env
+      - .env.production
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/eldoradodb"
       REDIS_URL: "redis://redis:6379"
     networks:
       - eldorado_network
-    volumes:
-      - .:/app
-      - /app/node_modules # Prevent overwriting node_modules with local volume
 
   db:
     image: postgres:15

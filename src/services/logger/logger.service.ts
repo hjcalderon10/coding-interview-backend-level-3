@@ -1,26 +1,31 @@
 import pino from 'pino';
 import caller from 'pino-caller';
 import { LoggerContextService } from './logger-context.service';
-
-const baseLogger = pino({
-  transport: process.env.NODE_ENV !== 'production'
-    ? { target: 'pino-pretty', options: { colorize: true, translateTime: 'HH:MM:ss Z', ignore: 'pid,hostname' } }
-    : undefined,
-});
-
-const logger = caller(baseLogger, { relativeTo: process.cwd() });
+import { ENV } from '@/server/config/environment'
 
 export class LoggerService {
+  static baseLogger = pino({
+    transport:
+      ENV.NODE_ENV !== 'production'
+        ? {
+            target: 'pino-pretty',
+            options: { colorize: true, translateTime: 'HH:MM:ss Z', ignore: 'pid,hostname' },
+          }
+        : undefined,
+  })
+
+  static logger = caller(this.baseLogger, { relativeTo: process.cwd() })
+
   static info(message: string, obj?: Record<string, unknown>) {
-    logger.info({ requestId: LoggerContextService.requestId, ...obj }, message);
+    this.logger.info({ requestId: LoggerContextService.requestId, ...obj }, message)
   }
 
   static error(message: string, obj?: Record<string, unknown>) {
-    logger.error({ requestId: LoggerContextService.requestId, ...obj }, message);
+    this.logger.error({ requestId: LoggerContextService.requestId, ...obj }, message)
   }
 
   static debug(message: string, obj?: Record<string, unknown>) {
-    if (process.env.DEBUG_MODE === 'true')
-      logger.debug({ requestId: LoggerContextService.requestId, ...obj }, message);
+    if (ENV.LOG_LEVEL === 'debug')
+      this.logger.debug({ requestId: LoggerContextService.requestId, ...obj }, message)
   }
 }

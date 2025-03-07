@@ -1,7 +1,5 @@
+import { ENV } from '@/server/config/environment'
 import { startServer } from './server/server'
-import dotenv from 'dotenv'
-
-dotenv.config()
 
 process.on('unhandledRejection', (err) => {
   console.error(err)

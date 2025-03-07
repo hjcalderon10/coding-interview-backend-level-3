@@ -3,6 +3,12 @@ export class Item {
     public id: string | null,
     public name: string,
     public price: number,
-    public createdAt?: Date,
+    public created_date?: Date,
+  ) {}
+}
+export class UpdateItem {
+  constructor(
+    public name?: string,
+    public price?: number,
   ) {}
 }
